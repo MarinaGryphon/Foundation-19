@@ -130,7 +130,7 @@ var/const/NO_EMAG_ACT = -50
 /obj/item/card/emag/Initialize()
 	. = ..()
 	set_extension(src,/datum/extension/chameleon/emag)
-	
+
 /obj/item/card/emag/get_antag_info()
 	. = ..()
 	. += "You can use this cryptographic sequencer in order to subvert electronics or forcefully open doors you don't have access to. These actions are irreversible and the card only has a limited number of charges!"
@@ -170,6 +170,7 @@ var/const/NO_EMAG_ACT = -50
 
 	var/detail_color
 	var/extra_details
+	var/keycard = 0 //is this a non-id keycard used for access?
 
 /obj/item/card/id/Initialize()
 	.=..()
@@ -206,7 +207,8 @@ var/const/NO_EMAG_ACT = -50
 
 /obj/item/card/id/examine(mob/user, distance)
 	. = ..()
-	to_chat(user, "It says '[get_display_name()]'.")
+	if(!keycard)
+		to_chat(user, "It says '[get_display_name()]'.")
 	if(distance <= 1)
 		show(user)
 
@@ -218,9 +220,10 @@ var/const/NO_EMAG_ACT = -50
 		send_rsc(user, front, "front.png")
 		send_rsc(user, side, "side.png")
 	var/datum/browser/popup = new(user, "idcard", name, 600, 250)
-	popup.set_content(dat())
-	popup.set_title_image(usr.browse_rsc_icon(src.icon, src.icon_state))
-	popup.open()
+	if(!keycard)
+		popup.set_content(dat())
+		popup.set_title_image(usr.browse_rsc_icon(src.icon, src.icon_state))
+		popup.open()
 	return
 
 /obj/item/card/id/proc/get_display_name()
@@ -337,7 +340,7 @@ var/const/NO_EMAG_ACT = -50
 				id.military_branch = new_branch
 				id.military_rank = null
 			return
-	
+
 	to_chat(client, SPAN_WARNING("Input, must be an existing branch - [var_value] is invalid"))
 
 /decl/vv_set_handler/id_card_military_rank
@@ -366,7 +369,7 @@ var/const/NO_EMAG_ACT = -50
 		if(new_rank)
 			id.military_rank = new_rank
 			return
-	
+
 	to_chat(client, SPAN_WARNING("Input must be an existing rank belonging to military_branch - [var_value] is invalid"))
 
 /obj/item/card/id/silver
@@ -520,15 +523,15 @@ var/const/NO_EMAG_ACT = -50
 /obj/item/card/id/security
 	name = "identification card"
 	desc = "A card issued to security staff."
-	job_access_type = /datum/job/officer
+//	job_access_type = /datum/job/officer
 	color = COLOR_OFF_WHITE
 	detail_color = COLOR_MAROON
 
 /obj/item/card/id/security/warden
-	job_access_type = /datum/job/warden
+//	job_access_type = /datum/job/warden
 
 /obj/item/card/id/security/detective
-	job_access_type = /datum/job/detective
+//	job_access_type = /datum/job/detective
 
 /obj/item/card/id/security/head
 	name = "identification card"
@@ -620,3 +623,42 @@ var/const/NO_EMAG_ACT = -50
 	access = list(access_merchant)
 	color = COLOR_OFF_WHITE
 	detail_color = COLOR_BEIGE
+
+//scp foundation key cards
+
+/obj/item/card/id/level_1
+	name = "level 1 access card"
+	desc = "A key card issued to staff."
+	access = list(level_1)
+	color = COLOR_YELLOW_GRAY
+	detail_color = COLOR_BEIGE
+	keycard = 1
+
+/obj/item/card/id/level_2
+	name = "level 2 access card"
+	desc = "A key card issued to staff."
+	access = list(level_1,level_2)
+	color = COLOR_YELLOW
+	detail_color = COLOR_BEIGE
+	keycard = 1
+/obj/item/card/id/level_3
+	name = "level 3 access card"
+	desc = "A key card issued to staff."
+	access = list(level_1,level_2,level_3)
+	color = COLOR_ORANGE
+	detail_color = COLOR_WHITE
+	keycard = 1
+/obj/item/card/id/level_4
+	name = "level 4 access card"
+	desc = "A key card issued to staff."
+	access = list(level_1,level_2,level_3,level_4)
+	color = PIPE_COLOR_ORANGE
+	detail_color = COLOR_WHITE
+	keycard = 1
+/obj/item/card/id/level_5
+	name = "level 5 access card"
+	desc = "A key card issued to staff."
+	access = list(level_1,level_2,level_3,level_4,level_5)
+	color = COLOR_RED
+	detail_color = COLOR_WHITE
+	keycard = 1

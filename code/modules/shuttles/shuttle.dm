@@ -50,7 +50,6 @@
 		current_location = SSshuttle.get_landmark(current_location)
 	if(!istype(current_location))
 		CRASH("Shuttle \"[name]\" could not find its starting location.")
-
 	if(src.name in SSshuttle.shuttles)
 		CRASH("A shuttle with the name '[name]' is already defined.")
 	SSshuttle.shuttles[src.name] = src
